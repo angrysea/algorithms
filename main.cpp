@@ -51,29 +51,28 @@ void testAddBinary() {
 
 void testrbt()
 {
-	int a[100];
+	int a[100000];
 	number_enerator(sizeof(a) / sizeof(int), &a[0]);
 
 	rbtree<int> b;
 	for (auto i : a) {
-		cout << "insert value: " << i << std::endl;
 		b.insert(i);
 	}
 
-	b.printLevelOrder();
-
-	for (auto i : a) {
+	//b.printLevelOrder();
+	int max = sizeof(a) / sizeof(int);
+	for (auto i = 0; i < max; ) {
 		auto x{ 0 };
 		auto start = std::chrono::high_resolution_clock::now();
-		auto result = b.find(i, x);
+		auto result = b.find(a[i], x);
 		if (result) {
 			results(start);
-			std::cout << "Find results for (" << i << ") result = " << x;
+			std::cout << "Find results for (" << a[i] << ") result = " << x;
 		}
 		else {
-			std::cout << "Find failed!! for " << i;
-			b.find(i, x);
+			std::cout << "Find failed!! for " << a[i];
 		}
+		i += (max/20);
 		std::cout << std::endl;
 	}
 

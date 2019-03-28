@@ -23,9 +23,6 @@ void swap(int & x, int & y)
 	x = x ^ y;
 	y = x ^ y;
 	x = x ^ y;
-	//int temp=x;
-	//x=y;
-	//y=temp;
 }
 
 void number_enerator(int size, int * input) {

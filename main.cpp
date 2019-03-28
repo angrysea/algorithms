@@ -51,7 +51,7 @@ void testAddBinary() {
 
 void testrbt()
 {
-	int a[100000];
+	int a[10000];
 	number_enerator(sizeof(a) / sizeof(int), &a[0]);
 
 	rbtree<int> b;
@@ -72,10 +72,23 @@ void testrbt()
 		else {
 			std::cout << "Find failed!! for " << a[i];
 		}
-		i += (max/20);
+		std::cout << std::endl;
+		auto node = b.find(a[i]);
+		auto successor = b.tree_successor(node);
+		if (node == successor) {
+			std::cout << "Error find succeessor " << node->getValue() << std::endl;
+		}
+		if (successor != nullptr) {
+			std::cout << "Find succeessor " << node->getValue() << " is " << successor->getValue() << std::endl;
+		}
+		std::cout << std::endl;
+		i += (max / 20);
 		std::cout << std::endl;
 	}
-
+	auto node = b.tree_min();
+	std::cout << "Find min value " << node->getValue() << std::endl;
+	node = b.tree_max();
+	std::cout << "Find max value " << node->getValue() << std::endl;
 }
 
 void testHash()

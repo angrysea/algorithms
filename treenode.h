@@ -66,8 +66,30 @@ public:
 		return false;
 	}
 
+	treenode<T> *  find(T entry) {
+		if (entry == value) {
+			return this;
+		}
+
+		if (value > entry) {
+			if (left != nullptr) {
+				return left->find(entry);
+			}
+		}
+		else if (value < entry) {
+			if (right != nullptr) {
+				return right->find(entry);
+			}
+		}
+		return nullptr;
+	}
+
 	const T & setValue(T & newValue) {
 		value = newValue;
+		return value;
+	}
+
+	const T & getValue() {
 		return value;
 	}
 

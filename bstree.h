@@ -10,8 +10,6 @@
 template<class T>
 class bstree {
 public:
-	enum { black, red };
-
 	bstree() noexcept = default;
 
 	~bstree() {

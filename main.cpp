@@ -9,6 +9,8 @@
 #include "MergeSort.h"
 #include "utils.h"
 #include "rbtree.h"
+#include "graph.h"
+#include "simplegraph.h"
 
 void results(std::chrono::time_point<std::chrono::high_resolution_clock> start) noexcept {
 	auto elapsed = std::chrono::high_resolution_clock::now() - start;
@@ -16,8 +18,6 @@ void results(std::chrono::time_point<std::chrono::high_resolution_clock> start) 
 		<< std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count()
 		<< " in microseconds." << std::endl;
 }
-
-int testWordBreak();
 
 void testMergeSort() {
 	int ms[] = { 2, 4, 5, 7, 1, 2, 3, 6 };
@@ -119,8 +119,70 @@ void testHash()
 	}
 }
 
+void testSimpleGraph() {
+	simple_graph g(4);
+	g.addEdge(0, 1);
+	g.addEdge(0, 2);
+	g.addEdge(1, 2);
+	g.addEdge(2, 0);
+	g.addEdge(2, 3);
+	g.addEdge(3, 3);
+
+	g.print();
+	cout << endl;
+
+	g.breath_first_search(2);
+	cout << endl;
+
+	if (g.hasEdge(2, 3) == true)
+		cout << "There is an edge between 3 and 4" << endl;
+	else
+		cout << "There is no edge between 3 and 4" << endl;
+
+	if (g.hasEdge(1, 3) == true)
+		cout << "There is an edge between 2 and 3" << endl;
+	else
+		cout << "There is no edge between 2 and 3" << endl;
+
+	int length = 0, width = 0;
+
+	int ** m = g.getMatrix(length, width);
+	for (auto i = 0; i < length; ++i) {
+		for (auto j = 0; j < width; ++j) {
+			cout << m[i][j] << ", ";
+		}
+		cout << endl;
+	}
+
+	g.deleteMatrix(m, length, width);
+}
+
+void testGraph() {
+	graph g(4);
+	g.addEdge(0, 1);
+	g.addEdge(0, 2);
+	g.addEdge(1, 2);
+	g.addEdge(2, 0);
+	g.addEdge(2, 3);
+	g.addEdge(3, 3);
+
+	g.print();
+	cout << endl;
+
+	if (g.hasEdge(2, 3) == true)
+		cout << "There is an edge between 3 and 4" << endl;
+	else
+		cout << "There is no edge between 3 and 4" << endl;
+
+	if (g.hasEdge(1, 3) == true)
+		cout << "There is an edge between 2 and 3" << endl;
+	else
+		cout << "There is no edge between 2 and 3" << endl;
+}
+
 int main() {
 
-	testrbt();
+	testGraph();
+	//testrbt();
 	//testMergeSort();
 }

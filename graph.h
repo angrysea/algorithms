@@ -8,7 +8,45 @@ class vertex {
 public:
 	enum { white, gray, black };
 
-	vertex() : color(white), distance(0), predecessor(-1) {
+	vertex() : color(white), distance(0), predecessor(nullptr) {
+		value = -1;
+	}
+
+	vertex(int value) : value(value), color(white), distance(0), predecessor(nullptr) {
+	}
+
+	vertex(const vertex & toCopy) {
+		value = toCopy.value;
+		color = toCopy.white;
+		distance = toCopy.distance;
+		predecessor = toCopy.predecessor;
+		adjacent = adjacent;
+	}
+
+	vertex(const vertex && toMove) {
+		value = std::move(toMove.value);
+		color = std::move(toMove.white);
+		distance = std::move(toMove.distance);
+		predecessor = std::move(toMove.predecessor);
+		adjacent = std::move(adjacent);
+	}
+
+	auto operator=(const vertex & toCopy) {
+		value = toCopy.value;
+		color = toCopy.white;
+		distance = toCopy.distance;
+		predecessor = toCopy.predecessor;
+		adjacent = adjacent;
+		return *this;
+	}
+
+	auto operator=(const vertex && toMove) {
+		value = std::move(toMove.value);
+		color = std::move(toMove.white);
+		distance = std::move(toMove.distance);
+		predecessor = std::move(toMove.predecessor);
+		adjacent = std::move(adjacent);
+		return *this;
 	}
 
 	auto operator[](int index) {
@@ -25,7 +63,7 @@ public:
 		throw new std::out_of_range("Index out of range!");
 	}
 
-	void push_back(int value) {
+	void push_back(vertex * value) {
 		adjacent.push_back(value);
 	}
 
@@ -41,35 +79,66 @@ public:
 		return adjacent.size();
 	}
 
-	auto erase(std::vector<int>::const_iterator where) {
+	/*
+	auto erase(std::vector<vertex *>::const_iterator where) {
 		return adjacent.erase(where);
+	}
+	*/
+
+	int getColor() {
+		return color;
+	}
+
+	void setColor(int newValue) {
+		color = newValue;
+	}
+
+	int getDistance() {
+		return distance;
+	}
+
+	void setDistance(int newValue) {
+		distance = newValue;
+	}
+
+	vertex * getPredecessor() {
+		return predecessor;
+	}
+
+	void setPredecessor(vertex * newValue) {
+		predecessor = newValue;
+	}
+
+	int getValue() {
+		return value;
+	}
+
+	void setValue(int newValue) {
+		value = newValue;
 	}
 
 private:
 	int color;
 	int distance;
-	int predecessor;
-	std::vector<int> adjacent;
+	vertex * predecessor;
+	int value;
+	std::vector<vertex *> adjacent;
 };
 
 class graph {
-private:
-	std::vector<vertex> vertices;
-
 public:
 	graph(const int size) : vertices(size) {
+		for (int i = 0; i < size; ++i) {
+			vertices[i] = std::move(vertex(i));
+		}
 	}
 
 	void addEdge(int x, int y) {
 		auto & v = vertices[x];
-		for (auto d : v) {
-			if (d == y) {
-				return;
-			}
-		}
-		v.push_back(y);
+		v.push_back(&vertices[y]);
 	}
 
+	/*
 	void clearEdge(int x, int y) {
 		if (x > vertices.size() - 1) {
 			throw new std::out_of_range("Index out of range!");
@@ -81,14 +150,15 @@ public:
 			}
 		}
 	}
+	*/
 
 	bool hasEdge(int x, int y) {
 		if (x > vertices.size() - 1) {
 			return false;
 		}
 
-		for (auto i : vertices[x]) {
-			if (i == y) {
+		for (auto & i : vertices[x]) {
+			if (i->getValue() == y) {
 				return true;
 			}
 		}
@@ -96,19 +166,45 @@ public:
 		return false;
 	}
 
+	void breath_first_search(int index) {
 
+		auto & s = vertices[index];
+		for (auto & v : vertices) {
+			v.setColor(vertex::white);
+			v.setDistance(INT32_MAX);
+			v.setPredecessor(nullptr);
+		}
 
-	void breath_first_search(int s) {
+		s.setColor(vertex::gray);
+		s.setDistance(0);
+		s.setPredecessor(0);
+
+		std::list<vertex *> queue;
+		queue.push_back(&s);
+
+		while (!queue.empty()) {
+			auto & u = *(queue.front());
+			queue.pop_front();
+			for (auto & v : u) {
+				if (v->getColor() == vertex::white) {
+					v->setColor(vertex::gray);
+					v->setDistance(u.getDistance() + 1);
+					v->setPredecessor(&u);
+					queue.push_back(v);
+				}
+			}
+			u.setColor(vertex::black);
+		}
 	}
 
 	int ** getMatrix(int & length, int & width) {
 		length = vertices.size();
 		width = 0;
 
-		for (auto v : vertices) {
-			for (auto i : v) {
-				if (i > width) {
-					width = i;
+		for (auto & v : vertices) {
+			for (auto & i : v) {
+				if (i->getValue() > width) {
+					width = i->getValue();
 				}
 			}
 		}
@@ -123,8 +219,8 @@ public:
 			for (int j = 0; j < width; ++j) {
 				matrix[i][j] = 0;
 			}
-			for (auto n : vertices[i]) {
-				matrix[i][n] = 1;
+			for (auto & n : vertices[i]) {
+				matrix[i][n->getValue()] = 1;
 			}
 		}
 		return matrix;
@@ -138,11 +234,17 @@ public:
 	}
 
 	void print() {
-		for (auto v : vertices) {
-			for (auto i : v) {
-				std::cout << i << ", ";
+		for (auto & i : vertices) {
+			std::cout << "Index: " << i.getValue();
+			std::cout << " color: " << i.getColor();
+			std::cout << " distance: " << i.getDistance();
+			if (i.getPredecessor() != nullptr) {
+				std::cout << " predecessor: " << i.getPredecessor()->getValue();
 			}
 			std::cout << std::endl;
 		}
 	}
+
+private:
+	std::vector<vertex> vertices;
 };

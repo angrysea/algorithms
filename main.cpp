@@ -197,6 +197,24 @@ int test_word_break() {
 		wb.insert_word(dictionary[i]);
 	}
 
+	cout << "First DP Test: is ";
+	if(wb.break_word_dp("iloveicecreamandmango"))
+		cout << "pass."<< endl;
+	else
+		cout << "fail." << endl;
+
+	cout << "\nSecond DP Test: ";
+	if (wb.break_word_dp("ilovesamsungmobile"))
+		cout << "pass." << endl;
+	else
+		cout << "fail." << endl;
+
+	cout << "\nThird DP Test: ";
+	if (wb.break_word_dp("thiswillfail"))
+		cout << "pass." << endl;
+	else
+		cout << "fail." << endl;
+
 	cout << "First Test:\n";
 	wb.break_word("iloveicecreamandmango");
 

@@ -11,6 +11,9 @@
 #include "rbtree.h"
 #include "graph.h"
 #include "simplegraph.h"
+#include "wordbreak.h"
+
+using namespace std;
 
 void results(std::chrono::time_point<std::chrono::high_resolution_clock> start) noexcept {
 	auto elapsed = std::chrono::high_resolution_clock::now() - start;
@@ -181,9 +184,30 @@ void testGraph() {
 		cout << "There is no edge between 2 and 3" << endl;
 }
 
-int main() {
+int test_word_break() {
+	word_break wb;
 
-	testGraph();
+	const string dictionary[] = { 
+		"mobile", "samsung", "sam", "sung", "man", "mango", 
+		"icecream","and", "go", "i", "love", "ice", "cream" 
+	};
+
+	int n = sizeof(dictionary) / sizeof(dictionary[0]);
+	for (int i = 0; i < n; i++) {
+		wb.insert_word(dictionary[i]);
+	}
+
+	cout << "First Test:\n";
+	wb.break_word("iloveicecreamandmango");
+
+	cout << "\nSecond Test:\n";
+	wb.break_word("ilovesamsungmobile");
+	return 0;
+}
+
+int main() {
+	test_word_break();
+	//testGraph();
 	//testrbt();
 	//testMergeSort();
 }

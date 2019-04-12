@@ -33,7 +33,7 @@ public:
 		trie_node * crawler = root;
 
 		for (int i = 0; i < word.length(); i++) {
-			int index =word[i] - 'a';
+			int index = word[i] - 'a';
 			if (!crawler->children[index]) {
 				crawler->children[index] = new trie_node;
 			}
@@ -43,7 +43,7 @@ public:
 	}
 
 	bool search(string word) {
-	trie_node *	crawler = root;
+		trie_node *	crawler = root;
 
 		for (int i = 0; i < word.length(); ++i) {
 			int index = word[i] - 'a';

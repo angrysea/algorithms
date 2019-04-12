@@ -222,6 +222,31 @@ int test_word_break() {
 	wb.break_word("ilovesamsungmobile");
 	return 0;
 }
+// Word Break Problem
+int test_word_break_2() {
+	word_break wb;
+
+	string dictionary[] = { "this", "th", "is", "famous", "word", "break",
+			"b", "r", "e", "a", "k", "br", "bre", "brea", "ak", "problem" };
+
+	int n = sizeof(dictionary) / sizeof(dictionary[0]);
+	for (int i = 0; i < n; i++) {
+		wb.insert_word(dictionary[i]);
+	}
+
+	if (wb.can_be_brokenup("wordbreakproblem"))
+		cout << "String can be segmented" << endl;
+	else
+		cout << "String can't be segmented" << endl;
+
+	if (wb.can_be_brokenup("wordbreakproblemx"))
+		cout << "String can be segmented" << endl;
+	else
+		cout << "String can't be segmented" << endl;
+
+
+	return 0;
+}
 
 int main() {
 	test_word_break();
